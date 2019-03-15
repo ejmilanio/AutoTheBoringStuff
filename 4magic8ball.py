@@ -5,7 +5,7 @@ messages = ['It is certain',
             'Yes definitley', 
             'Reply hazy. Try again later',
             'Ask again later',
-            'Concentrate and ask again'
+            'Concentrate and ask again',
             'My reply is no',
             'Outlook not so good',
             'Very doubtful']

@@ -1,1 +1,1 @@
-@pyw.exe C:\Python34\mcb.pyw %*
+@pyw.exe C:\Users\ejmil\source\repos\AutoTheBoringStuff\7multClipboard.pyw %*
