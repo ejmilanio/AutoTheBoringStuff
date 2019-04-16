@@ -1,8 +1,11 @@
+###Reading and Writing Files###
+
+
 #Windows OS uses backslashes(\) as a seperator between file names
 #OS X and Linux use forwardslashes(/) as seperators between file names
 #os.path.join() will return string for all OS
 import os
-os.path.join('usr', 'bin', 'spam')
+os.path.join('usr', 'bin', 'spam') 
 
 myFiles = ['accounts.txt', 'details.csv', 'invite.docx']
 for filename in myFiles:
