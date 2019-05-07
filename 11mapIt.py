@@ -10,6 +10,4 @@ else:
     address = pyperclip.paste()
         
 
-#TODO: Get address from clipboard
-
 webbrowser.open('https://www.google.com/maps/place/' + address)
