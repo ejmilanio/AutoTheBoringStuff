@@ -216,10 +216,29 @@ doc = docx.Document()
 doc.add_paragraph('Hello world!')           #Document object's .add_paragraph method adds a paragraph
 doc.save('helloworld.docx')
 
+
 import docx
 doc = docx.Document()
 doc.add_paragraph('Hello World!')
 paraObj1 = doc.add_paragraph('This is a second paragraph')
 paraObj2 = doc.add_paragraph('This is a third paragraph')
-paraObj1.add_run(' This text is being added to the second paragraph.')
+paraObj1.add_run(' This text is being added to the second paragraph.')      #add_run() will add a run
 doc.save('multipleParagraphs.docx')
+
+
+#
+import docx
+doc = docx.Document()
+doc.add_heading('Header 0', 0)              #add_header('text', header num) will add a header of the specified style
+doc.add_heading('Header 1', 1)              #creates a Paragraph object
+doc.add_heading('Header 2', 2)
+doc.add_heading('Header 3', 3)
+doc.add_heading('Header 4', 4)
+doc.save('heading.docx')
+
+import docx
+doc = docx.Document()
+doc.add_paragraph('This is on the first page!')
+doc.paragraphs[0].runs[0].add_break(WD_BREAK.PAGsE)
+doc.add_paragraph('This is on the second page!')
+doc.save('twoPage.docx')

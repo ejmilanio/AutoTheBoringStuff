@@ -1,6 +1,6 @@
 from selenium import webdriver
 
-browser = webdriver.Chrome()
+browser = webdriver.Chrome("C:\\Users\\Mike\\AppData\\Local\Programs\\Python\\Python37-32\\chromedriver_win32\\chromedriver.exe", service_args=["--verbose", "--log-path=D:\\qc1.log"])
 
 browser.get('http://inventwithpython.com')
 try:
@@ -10,3 +10,4 @@ try:
 except:
     print('Was not able to find an element with that name')
 
+     
