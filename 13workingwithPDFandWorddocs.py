@@ -75,12 +75,151 @@ pdfWriter.write(resultPdfFile)                          #save the PdfFilewriter 
 resultPdfFile.close()                                   #close the new PdfFileWriter object
 minutesFile.close()                                     #close original PdfFileWriter object
 
+#@ OVerlaying Pages @#
+#good for adding things like watermarks or logos
+
+import PyPDF2
+minutesFile = open('meetingminutes.pdf', 'rb')                          #create File obj by opening PDF file
+pdfReader = PyPDF2.PdfFileReader(minutesFile)                           #create a PdfReader obj
+minutesFirstPage = pdfReader.getPage(0)                                 #create a Page obj
+pdfWatermarkReader = PyPDF2.PdfFileReader(open('watermark.pdf','rb'))   #create a PdfReader obj of page to be laid over
+minutesFirstPage.mergePage(pdfWatermarkReader.getPage(0))               #merge watermaker PdfReader obj over first PdfReader obj
+pdfWriter = PyPDF2.PdfFileWriter()                                      #Create a PdfFileWriter obj
+pdfWriter.addPage(minutesFirstPage)                                     #add new watermarked cover to new PDF
+
+for pageNum in range(1,pdfReader.numPages):                             #loop through remaining pages in original doc
+    pageObj = pdfReader.getPage(pageNum)                                    #and add to new PDF doc
+    pdfWriter.addPage(pageObj)
+resultPdfFile = open('watermarkedCover.pdf', 'wb')                      #create, save and close final PDF doc
+pdfWriter.write(resultPdfFile)  
+minutesFile.close()
+resultPdfFile.close()
+
+#@ Encrypting PDFs @#
+#PdfFileWriter Obj can also add encryptions
+import PyPDF2
+pdfFile = open('meetingminutes.pdf', 'rb')
+pdfReader = PyPDF2.PdfFileReader(pdfFile)
+pdfWriter = PyPDF2.PdfFileWriter()
+for pageNum in range(pdfReader.numPages):
+    pdfWriter.addPage(pdfReader.getPage(pageNum))
+
+pdfWriter.encrypt('swordfish')                              #call a PdfFileWriter obj encrypt function and pass a string as a password to encrypt
+resultPdf = open('encryptedminutes.pdf', 'wb')
+pdfWriter.write(resultPdf)
+resultPdf.close()
+
+### Word Documents ###
+#.docx files have three different data types represented in Python-docx
+    #Document object represents the entire document
+    #Paragraph object represents a paragraph
+    #Run object represents a contiguous run of text w/ the same style
+
+#@ Reading Word Docs @#
+import docx
+doc = docx.Document('demo.docx')            #docx.Document('documentName.docx') will create a Document object
+len(doc.paragraphs)                         #.paragraphs is an attribute of a Document object and creates a list of Paragraph obj when called
+doc.paragraphs[0].text                      #.text is an attr of a Paragraph obj
+doc.paragraphs[1].text                      #can access different Paragraph obj by calling it's pos in the array
+len(doc.paragraphs[1].runs)                 #.runs is an attr of Paragraph obj. Creates a list of Run obj
+doc.paragraphs[1].runs[0].text              #Run objs have a text attr as well.
+doc.paragraphs[1].runs[2].text
+doc.paragraphs[1].runs[3].text
+
+#@ Getting the Full Text from a .docx File @#
+import readDocx
+print(readDocx.getText('demo.docx'))
+
+import docx
+doc = docx.Document('demo.docx')
+fullText = []
+for para in doc.paragraphs:
+    fullText.append('    ' + para.text)
+print('\n\n'.join(fullText))
+
+#@ Styling Paragraph and Run Objects @#
+# Types of stylings
+    #Paragraph styles which can only be applied to Paragraph objects
+    #Run styles which can only be applied to Run objects
+    #Linked styles which can be applied to both
+#use the .style attr for either Paragraph obj or Run Obj
+    # paragraphObj.style = 'style'
+    
+''' Types of styles in word
+
+'Normal'    'Heading5'  'ListBullet'    'ListParagraph'     'BodyText'
+
+'Heading6'  'ListBullet2'   'MacroText'     'BodyText2'     'Heading7'
+
+'ListBullet3'   'NoSpacing'     'BodyText3'     'Heading8'  'ListContinue'
+
+'Quote'     'Caption'   'Heading9'  'ListContinue2'
+
+'Subtitle'  'Heading1'  'IntenseQuote'  'ListContinue3'
+
+'TOCHeading'    'Heading2'     'List'   'ListNumber'
+
+'Title'     'Heading3'     'List2'  'ListNumber2'
+
+ 'Heading4'      'List3'     'ListNumber3'
+
+'''
+
+#@ Creating Word Documents with NonDefault Styles @#
+
+#have to create the new style in Word
+    #at the bottom of the styles pane click New Style
+    #the name given to this style will be available for use with the Python-Docx module
+
+#@ Run Attributes @#
+#Runs can be styled using text attributes
+    #Three states for each attr
+        #True, attr is enabled
+        #False, attr is disabled
+        #None, text is set to Run Objs default setting
+
+""".text Attributes
+
+Attribute           Description
+bold                Text appears bold
+italic              Text appears italicized
+underline           Text is underlined
+strike              Text has a strikethrough
+double_strike       Text has a double strikethrough
+all_caps            Text is all caps
+small_caps          The text appears in capital letters, w/ lowercase letters appearing 2 points smaller
+shadow              Text appears with a shadow
+outline             Text appears with an outline rather than solid
+rtl                 Text is written right to left
+imprint             The text appears pressed into the page
+emboss              The text appears rased off the page in releif
 
 
+"""
 
+import docx
+doc = docx.Document('demo.docx')
+doc.paragraphs[0].text
+doc.paragraphs[0].style
+doc.paragraphs[0].style = 'Normal'
+doc.paragraphs[1].text
+(doc.paragraphs[1].runs[0].text, doc.paragraphs[1].runs[1].text, doc.paragraphs[1].runs[2].text, doc.paragraphs[1].runs[3].text)
+doc.paragraphs[1].runs[0].style = 'QuoteChar'
+doc.paragraphs[1].runs[1].underline = True
+doc.paragraphs[1].runs[3].underline = True
+doc.save('restyled.docx')
 
+#@ Writing Word Documents @#
 
+import docx
+doc = docx.Document()
+doc.add_paragraph('Hello world!')           #Document object's .add_paragraph method adds a paragraph
+doc.save('helloworld.docx')
 
-
-
-
+import docx
+doc = docx.Document()
+doc.add_paragraph('Hello World!')
+paraObj1 = doc.add_paragraph('This is a second paragraph')
+paraObj2 = doc.add_paragraph('This is a third paragraph')
+paraObj1.add_run(' This text is being added to the second paragraph.')
+doc.save('multipleParagraphs.docx')
