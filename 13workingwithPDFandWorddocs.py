@@ -239,6 +239,12 @@ doc.save('heading.docx')
 import docx
 doc = docx.Document()
 doc.add_paragraph('This is on the first page!')
-doc.paragraphs[0].runs[0].add_break(WD_BREAK.PAGsE)
+doc.paragraphs[0].runs[0].add_break(docx.enum.text.WD_BREAK.PAGE)         #docx.enum.text.WD_BREAK.PAGE will create a page break at specified run
 doc.add_paragraph('This is on the second page!')
 doc.save('twoPage.docx')
+
+import docx
+doc.add_picture('zophie.png', width= docx.shared.Inches(1), height= docx.shared.Cm(4))
+#first argument is filename, optional: width and height arguments. Will default to original size of graphic
+    #can specify units as well
+
